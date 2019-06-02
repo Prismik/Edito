@@ -26,8 +26,7 @@ extension HtmlList: HtmlTag {
         }
     }
 
-    var openingContext: String { return "<\(rawValue)>" }
-    var closingContext: String? { return "</\(rawValue)>" }
+    var identifier: String { return rawValue }
 
     enum OrderedListAttribute: HtmlAttribute {
         case item

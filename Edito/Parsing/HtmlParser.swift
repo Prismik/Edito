@@ -7,11 +7,69 @@
 //
 
 import Foundation
+import AppKit
 
 public class HtmlParser {
-    static func parse(content: String) {
-        // TODO identify the main tags and create the specific HTMLTag object to parse them
-        //      return a list of configured UIView
+    enum HtmlError: Error {
+        /// Error occuring when html is malformed.
+        case invalidSyntax(String)
+    }
+
+    private func tag(from content: String) -> HtmlTag? {
+        return
+            HtmlParagraph(rawValue: content) ??
+            HtmlList(rawValue: content) ??
+            HtmlHeader(rawValue: content)
+    }
+
+    private var stack: [HtmlTag] = []
+    private static let tagStart: Character = "<"
+    private static let tagClose: Character = ">"
+    private static let endTagDelimiter: Character = "/"
+
+    private typealias TagContext = (inTag: Bool, closing: Bool, inTagContent: Bool)
+
+    /// Parses html content into a list of formated attributed strings
+    func parse(content: String) throws -> [NSAttributedString] {
+        var attributedStrings: [NSAttributedString] = []
+        var subcontentString = ""
+        var tagString = ""
+        var context: TagContext = (inTag: false, closing: false, inTagContent: false)
+        for char in content {
+            if char == HtmlParser.endTagDelimiter {
+                context = (inTag: true, closing: true, inTagContent: false)
+            } else if char == HtmlParser.tagClose {
+                guard let tag = tag(from: tagString) else {
+                    subcontentString += context.closing ? "</\(tagString)>" : "<\(tagString)>"
+                    context = (inTag: false, closing: false, inTagContent: true)
+                    tagString.removeAll()
+                    continue
+                }
+
+                if !context.closing {
+                    stack.append(tag)
+                } else {
+                    let matchingTag = stack.removeLast()
+                    if tag.equals(tag: matchingTag) {
+                        attributedStrings.append(tag.attributedString(from: subcontentString))
+                        subcontentString.removeAll()
+                    } else {
+                        throw HtmlError.invalidSyntax("Non matching tag found for \(matchingTag.identifier)")
+                    }
+                }
+
+                context = (inTag: false, closing: false, inTagContent: true)
+                tagString.removeAll()
+            } else if char == HtmlParser.tagStart {
+                context = (inTag: true, closing: false, inTagContent: false)
+            } else if context.inTag {
+                tagString.append(char)
+            } else {
+                subcontentString.append(char)
+            }
+        }
+
+        return attributedStrings
     }
 
     static func parse(content: String, as tag: HtmlTag) -> NSAttributedString {
@@ -65,44 +123,4 @@ public class HtmlParser {
 
         return attributedString
     }
-
-//    public static func computeViews(for htmlString: String) -> [UIView] {
-//        var mutableString = htmlString
-//        var views: [UIView] = []
-//        while !mutableString.isEmpty, let tag = nextTag(in: &mutableString) {
-//            print(tag.content)
-//            print(tag.contentType)
-//            if let view = tag.computeView() {
-//                views.append(view)
-//            }
-//        }
-//
-//        return views
-//    }
-
-//    private static func nextTag(in string: inout String) -> HtmlTags? {
-//        guard let tagStartIndex = string.firstIndex(of: "<") else {
-//            print("tagStartIndex < not found")
-//            return nil
-//        }
-//
-//        string = String(string[tagStartIndex...])
-//        guard let tagEndIndex = string.firstIndex(of: ">") else {
-//            print("tagEndIndex > not found")
-//            return nil
-//        }
-//
-//        let innerTag = string[string.index(after: tagStartIndex)..<tagEndIndex]
-//        string = String(string[string.index(after: tagEndIndex)...])
-//
-//
-//        guard let contenType = HtmlTags.ContentType(rawValue: String(innerTag)) else { return nil }
-//        guard let closingTagStartIndex = string.firstIndex(of: "<") else { return nil }
-//
-//        let content = string[..<closingTagStartIndex]
-//        string = String(string[string.index(after: closingTagStartIndex)...])
-//        guard let closingTagEndIndex = string.firstIndex(of: ">") else { return nil }
-//        string = String(string[string.index(after: closingTagEndIndex)...])
-//        return HtmlTags(type: contenType, content: String(content))
-//    }
 }

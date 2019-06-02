@@ -8,11 +8,12 @@
 
 import Foundation
 
-
-let contentString = "This is <b>Bold</b> content and <i>italic</i> content."
-print(HtmlParser.parse(content: contentString, as: HtmlParagraph.p))
-
-let listString = "<li>A list item</li>\n<li>Another list item</li>\n<li>Last list item</li>"
-print(HtmlParser.parse(content: listString, as: HtmlList.ul))
-print(HtmlParser.parse(content: listString, as: HtmlList.ol))
-
+let fullString =
+    """
+    <ol><li>A list item</li>\n<li>Another list item</li>\n<li>Last list item</li></ol>
+    <p>First <em>chunk</em> of text</p>
+    <p>This is <b>Bold</b> content and <i>italic</i> content.</p>
+    """
+if let strings = try? Edito.parse(content: fullString) {
+    print(strings)
+}

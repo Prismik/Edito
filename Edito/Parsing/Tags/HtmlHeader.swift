@@ -24,8 +24,7 @@ enum HtmlHeader: String {
 
 extension HtmlHeader: HtmlTag {
     var supportedAttributes: HtmlAttribute.Type { return HtmlHeader.Attribute.self }
-    var openingContext: String { return "<\(rawValue)>" }
-    var closingContext: String? { return "</\(rawValue)>" }
+    var identifier: String { return rawValue }
 
     enum Attribute: HtmlAttribute {
         case italic

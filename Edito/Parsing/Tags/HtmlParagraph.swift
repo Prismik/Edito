@@ -19,8 +19,7 @@ enum HtmlParagraph: String {
 
 extension HtmlParagraph: HtmlTag {
     var supportedAttributes: HtmlAttribute.Type { return HtmlParagraph.Attribute.self }
-    var openingContext: String { return "<\(rawValue)>" }
-    var closingContext: String? { return "</\(rawValue)>" }
+    var identifier: String { return rawValue }
 
     enum Attribute: HtmlAttribute {
         case bold

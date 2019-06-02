@@ -9,17 +9,24 @@
 import Foundation
 
 protocol HtmlTag {
-    var openingContext: String { get }
-    var closingContext: String? { get }
+    /// String value of a tag
+    var identifier: String { get }
+
+    /// The nested tags that can be used in this tag's context to style part of the content.
     var supportedAttributes: HtmlAttribute.Type { get }
     static var all: [HtmlTag] { get }
 
     func didFindTag()
+    func equals(tag: HtmlTag) -> Bool
 }
 
 extension HtmlTag {
     func didFindTag() {
         // No-op by default
+    }
+
+    func equals(tag: HtmlTag) -> Bool {
+        return identifier == tag.identifier
     }
 
     func attributedString(from content: String) -> NSAttributedString {
