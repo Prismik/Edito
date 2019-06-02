@@ -14,6 +14,11 @@ protocol HtmlTag {
 
     /// The nested tags that can be used in this tag's context to style part of the content.
     var supportedAttributes: HtmlAttribute.Type { get }
+
+    var key: NSAttributedString.Key { get }
+    var value: Any { get }
+    var dictionary: [NSAttributedString.Key: Any] { get }
+
     static var all: [HtmlTag] { get }
 
     func didFindTag()

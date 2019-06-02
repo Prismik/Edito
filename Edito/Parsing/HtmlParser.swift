@@ -118,7 +118,8 @@ public class HtmlParser {
         }
 
         if !currentString.isEmpty {
-            attributedString.append(NSAttributedString(string: currentString))
+            attributedString.append(NSAttributedString(string: currentString,
+                                                       attributes: tag.dictionary))
         }
 
         return attributedString

@@ -28,6 +28,14 @@ extension HtmlList: HtmlTag {
 
     var identifier: String { return rawValue }
 
+    var key: NSAttributedString.Key { return .font }
+    var value: Any {
+        guard let stylesheet = Edito.stylesheet else { return NSFont.systemFont(ofSize: 16) }
+        return stylesheet.regularFont
+    }
+    var dictionary: [NSAttributedString.Key: Any] { return [key: value] }
+
+
     enum OrderedListAttribute: HtmlAttribute {
         case item
 
@@ -49,7 +57,10 @@ extension HtmlList: HtmlTag {
 
         var supportedContexts: [String] { return ["li"] }
         var key: NSAttributedString.Key { return .font }
-        var value: Any { return NSFont.systemFont(ofSize: 16) }
+        var value: Any {
+            guard let stylesheet = Edito.stylesheet else { return NSFont.systemFont(ofSize: 16) }
+            return stylesheet.regularFont
+        }
         var modifier: String {
             return "\n•  "
         }
