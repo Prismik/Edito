@@ -9,7 +9,7 @@
 import Foundation
 import AppKit
 
-enum HtmlParagraph: String {
+internal enum HtmlParagraph: String {
     case p = "p"
     case div = "div"
     case span = "span"

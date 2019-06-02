@@ -9,7 +9,7 @@
 import Foundation
 import AppKit
 
-enum HtmlHeader: String {
+internal enum HtmlHeader: String {
     case h1 = "h1"
     case h2 = "h2"
     case h3 = "h3"

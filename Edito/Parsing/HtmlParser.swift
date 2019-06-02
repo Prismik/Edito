@@ -29,8 +29,7 @@ public class HtmlParser {
 
     private typealias TagContext = (inTag: Bool, closing: Bool, inTagContent: Bool)
 
-    /// Parses html content into a list of formated attributed strings
-    func parse(content: String) throws -> [NSAttributedString] {
+    internal func parse(content: String) throws -> [NSAttributedString] {
         var attributedStrings: [NSAttributedString] = []
         var subcontentString = ""
         var tagString = ""
@@ -72,7 +71,7 @@ public class HtmlParser {
         return attributedStrings
     }
 
-    static func parse(content: String, as tag: HtmlTag) -> NSAttributedString {
+    internal static func parse(content: String, as tag: HtmlTag) -> NSAttributedString {
         let attributedString = NSMutableAttributedString(string: "")
         var currentString = ""
         var inTag = false

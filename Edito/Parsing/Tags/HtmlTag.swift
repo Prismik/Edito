@@ -8,7 +8,7 @@
 
 import Foundation
 
-protocol HtmlTag {
+internal protocol HtmlTag {
     /// String value of a tag
     var identifier: String { get }
 
@@ -40,7 +40,7 @@ extension HtmlTag {
     }
 }
 
-protocol HtmlAttribute {
+internal protocol HtmlAttribute {
     var supportedContexts: [String] { get }
     var key: NSAttributedString.Key { get }
     var value: Any { get }

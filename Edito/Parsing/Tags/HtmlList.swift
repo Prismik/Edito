@@ -9,7 +9,7 @@
 import Foundation
 import AppKit
 
-enum HtmlList: String {
+internal enum HtmlList: String {
     case ul = "ul"
     case ol = "ol"
 
